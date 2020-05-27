@@ -4,7 +4,7 @@
  * @Author: tina.cai
  * @Date: 2020-05-10 16:11:52
  * @LastEditors: tina.cai
- * @LastEditTime: 2020-05-12 11:56:03
+ * @LastEditTime: 2020-05-17 15:13:21
  */
 const net = require("net");
 
@@ -213,8 +213,8 @@ class TrunkedBodyParser {
           this.isFinished = true;
         }
       } else {
-        this.length *= 10;
-        this.length += char.charCodeAt(0) - "0".charCodeAt(0);
+        this.length *= 16;
+        this.length += parseInt(char, 16);
       }
     } else if (this.current === this.WAITTING_LENGTH_LINE_END) {
       if (char === "\n") {
