@@ -4,45 +4,44 @@
  * @Author: tina.cai
  * @Date: 2020-05-10 15:29:40
  * @LastEditors: tina.cai
- * @LastEditTime: 2020-05-27 23:45:16
+ * @LastEditTime: 2020-05-31 23:01:16
  */
-const http = require("http");
+const http = require('http')
 const server = http.createServer((req, res) => {
-  console.log("request received");
-  console.log(req.headers);
-  res.setHeader("Content-Type", "text/html");
-  res.setHeader("X-Foo", "bar");
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end(`<html maaa=a >
-    <head>
+  console.log('request received')
+  console.log(req.headers)
+  res.setHeader('Content-Type', 'text/html')
+  res.setHeader('X-Foo', 'bar')
+  res.writeHead(200, { 'Content-Type': 'text/plain' })
+  res.end(`<html maaa=a>
+  <head>
       <style>
-        body div{
-          display: flex;
-          width: 500px;
-          height: 100px;
-          background-color: rgb(255, 0, 0);
-        }
-        body div #myid{
-          display: flex;
-          width: 100px;
-          height: 30px;
-          background-color: rgb(0, 255, 0);
-        }
-        body div .myclass{
-          display: flex;
-          width: 30px;
-          height: 50px;
-          background-color: rgb(0, 0, 255);
-        }
+          #main{
+              display: flex;
+              flex-direction: row;
+              width: 500px;
+              height: 300px;
+              background-color: rgb(255,255,255);
+          }
+          #one {
+              width: 200px;
+              height: 40px;
+              background-color: rgb(100,0,0);
+          }
+          #two{
+              width: 200px;
+              height: 100px;
+              background-color: rgb(0,100,0);
+          }
       </style>
-    </head>
-    <body>
-      <div>
-        <div id="myid"></div>
-        <div class="myclass"></div>
+  </head>
+  <body>
+      <div id="main">
+          <div id="one"></div>
+          <div id="two"></div>
       </div>
-    </body>
-  </html>`);
-});
+  </body>
+  </html>`)
+})
 
-server.listen(8088);
+server.listen(8088)
