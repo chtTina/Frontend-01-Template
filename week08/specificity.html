@@ -1,0 +1,44 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: tina.cai
+ * @Date: 2020-05-28 20:43:05
+ * @LastEditors: tina.cai
+ * @LastEditTime: 2020-05-28 20:51:10
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* div#a.b .c.x {
+        color: red;
+      }
+      div#a.b .c[id="x"] {
+        color: blue;
+      } */
+      /* #a:not(#b) {
+        color: green;
+      }
+
+      #a #x {
+        color: blue;
+      } */
+
+      div.a {
+        color: green;
+      }
+
+      *.a {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="a" class="b">
+      <div class="c" id="x">red</div>
+    </div>
+  </body>
+</html>

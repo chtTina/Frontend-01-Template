@@ -4,7 +4,7 @@
  * @Author: tina.cai
  * @Date: 2020-05-17 15:06:01
  * @LastEditors: tina.cai
- * @LastEditTime: 2020-06-01 15:42:26
+ * @LastEditTime: 2020-06-03 00:46:18
  */
 const css = require('css')
 const layout = require('./layout')
@@ -22,15 +22,30 @@ let stack = [{ type: 'document', children: [] }]
 function specificity (selector) {
   var p = [0, 0, 0, 0]
   var selectorParts = selector.split(' ')
+  let regClass = /(\.\w+)+/g
+  let resClass = selector.match(regClass)
+
+  if(resClass && resClass.length){
+    for(let i = 0; i < resClass.length; i++){
+      let tempArr = resClass[i].split('.')
+      for(let j = 1; j < tempArr.length; j++){
+        p[2]++
+      }
+    }
+  }
+
   for (var part of selectorParts) {
-    if (part.charAt(0) == '#') {
+    let regId = /(#\w+)+/g;
+    let resId = part.match(regId)
+
+    if (resId && resId[0].charAt(0) == '#') {
       p[1] += 1
-    } else if (part.charAt(0) == '.') {
-      p[2] += 1
-    } else {
+    } else if(part.charAt(0) !== '#' && part.charAt(0) !== '.') {
       p[3] += 1
     }
   }
+  console.log('selector', selector)
+  console.log('p', p)
   return p
 }
 
@@ -62,16 +77,62 @@ function matchMethod (element, selector) {
     return false
   }
 
-  if (selector.charAt(0) == '#') {
+  //id
+  let regId = /(#\w+)+/g
+  let resId = selector.match(regId)
+ 
+  // 多个class
+  let regClass = /(\.\w+)+/g
+  let resClass = selector.match(regClass)
+
+  if(resClass){
+    let resClassArr = [];
+    for(let i = 0; i < resClass.length; i++){
+      let tempArr = resClass[i].split('.')
+      for(let j = 0; j < tempArr.length; j++){
+        resClassArr.push(tempArr[j])
+      }
+    }
+
+    let classAttr = element.attributes.filter(attr => attr.name === 'class')
+    let classAttrRes = []
+
+    if(classAttr && classAttr[0]){
+      classAttrRes = classAttr[0]["value"].split(" ")
+    }
+
+    let tempFlag = null;
+    for(let i = 0; i < resClassArr.length; i++){
+      tempFlag = false;
+      let k = 0;
+      for(; k < classAttrRes.length; k++){
+        if(classAttrRes[k] === resClassArr[i]){
+          tempFlag = true;
+          break
+        }
+      }
+      if(!tempFlag && k === classAttrRes.length){
+        return false;
+      }
+    }
+  }
+
+
+  if (resId && resId[0].charAt(0) == '#') {
     var attr = element.attributes.filter((attr) => attr.name === 'id')[0]
-    if (attr && attr.value === selector.replace('#', '')) return true
-  } else if (selector.charAt(0) == '.') {
-    var attr = element.attributes.filter((attr) => attr.name === 'class')[0]
-    if (attr && attr.value === selector.replace('.', '')) return true
-  } else {
+    if (attr && attr.value === resId.replace('#', '')){
+      return true
+    }else{
+      return false
+    }
+  } else if(selector.charAt(0) !== '#' && selector.charAt(0) !== '.'){
     if (element.tagName === selector) {
       return true
+    }else{
+      return false
     }
+  }else if(resClass && resClass.length){
+    return true;
   }
 
   return false
