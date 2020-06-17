@@ -1,0 +1,54 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: tina.cai
+ * @Date: 2020-06-13 14:33:53
+ * @LastEditors: tina.cai
+ * @LastEditTime: 2020-06-13 15:22:50
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="a">
+    <span>1</span>
+    <p>2</p>
+    <p>3</p>
+    <div>4</div>
+  </div>
+  <script>
+
+    // 普通方法
+    function reverseElement(element){
+      var childrens = element.children;
+      let n = childrens.length - 1;
+      while(n--){
+        element.appendChild(childrens[n]);
+      };
+    }
+    
+
+    // range方法
+    
+    function reverseElementRange(element){
+      let range = new Range();
+      range.selectNodeContents(element);
+      var fragment = range.extractContents();
+      let n = fragment.childNodes.length - 1;
+      while(n--){
+        fragment.appendChild(fragment.childNodes[n])
+      }
+      element.appendChild(fragment);
+    }
+
+    var element = document.getElementById('a');
+    // reverseElement(element)
+    reverseElementRange(element)
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: tina.cai
+ * @Date: 2020-06-13 19:22:55
+ * @LastEditors: tina.cai
+ * @LastEditTime: 2020-06-13 21:08:12
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .cell{
+      display: inline-block;
+      vertical-align: top;
+      width: 100px;
+      height: 100px;
+      font-size: 50px;
+      background: green;
+      text-align: center;
+      border: 1px solid #fff;
+      line-height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div id="board">
+    
+  </div>
+  <script>
+    var point = [
+      [2, 0, 0],
+      [0, 1, 0],
+      [0, 0, 0]
+    ];
+
+    let color = 1 ;
+
+    function show(){
+      let board = document.getElementById('board');
+      board.innerHTML = "";
+      
+      for(let i = 0; i < point.length; i++){
+        for(let j = 0; j < point[i].length; j++){
+          let cell = document.createElement('div');
+          cell.innerHTML = point[i][j] == 2 ? '❌' :
+                            point[i][j] == 1 ? '⭕️' :
+                            ""
+          cell.classList.add('cell')
+          cell.addEventListener("click",() => move(j, i))
+          board.appendChild(cell)
+        }
+        board.appendChild(document.createElement('br'))
+      }
+    }
+
+    function clone(point){
+      return JSON.parse(JSON.stringify(point));
+    }
+
+    function willWin(point, color){
+      for(let i = 0; i < 3; i++){
+        for(let j = 0; j < 3; j++){
+          if(point[i][j] !== 0){
+            continue
+          }
+          let tmp = clone(point)
+          tmp[i][j] = color;
+          if(isWin(tmp, color)){
+            return [j, i]
+          }
+        }
+      }
+      return null;
+    }
+
+    function bestChoice(point, color){
+      let dot = null;
+      if(dot = willWin(point, color)){
+        return {
+          dot: dot,
+          result: 1 
+        }
+      }
+      let result = -1
+      for(let i = 0; i < 3; i++){
+        for(let j = 0; j < 3; j++){
+          if(point[i][j] !== 0){
+            continue
+          }
+          let tmp = clone(point)
+          tmp[i][j] = color;
+          let opp = bestChoice(tmp, 3 - color);
+          if(-opp.result >= result){
+            dot = [i, j]
+            result = -opp.result
+          }
+        }
+      }
+      return {
+        dot : dot,
+        result: dot ? result : 0
+      }
+    }
+
+    function move(x, y){
+      if(point[y][x] !== 0)
+        return ;
+      point[y][x] = color;
+      if(isWin(point, color, x, y)){
+        alert(color == 2 ? '❌ win!' : color == 1 ? '⭕️ win!' : '')
+      }
+      color = 3 - color;
+      show();
+      if(willWin(point, color)){
+        console.log(color == 2 ? '❌ win!' : color == 1 ? '⭕️ win!' : '');
+        
+      }
+    }
+
+    function isWin(point, color,  x, y){
+      {
+        for(let i = 0; i < 3; i++){
+          let win = true;
+          for(let j = 0; j < 3; j++){
+            if(point[i][j] !== color){
+              win = false;
+              break;
+            }
+          }
+          if(win)
+            return true;
+        }
+      }
+      
+      {
+        for(let i = 0; i < 3; i++){
+          let win = true;
+          for(let j = 0; j < 3; j++){
+            if(point[j][i] !== color){
+              win = false;
+              break;
+            }
+          }
+          if(win)
+            return true;
+        }
+      }
+
+      {
+        let win = true;
+        for(let j = 0; j < 3; j++){
+          if(point[j][j] !== color){
+            win = false;
+            break;
+          }
+        }
+        if(win)
+          return true;
+      }
+
+
+      {
+        let win = true;
+        for(let j = 0; j < 3; j++){
+          if(point[j][2 - j] !== color){
+            win = false;
+            break;
+          }
+        }
+        if(win)
+          return true;
+      }
+
+      return false;
+
+    }
+
+    show()
+  </script>
+</body>
+</html>
