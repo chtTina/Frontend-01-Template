@@ -1,0 +1,105 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: tina.cai
+ * @Date: 2020-06-20 15:53:39
+ * @LastEditors: tina.cai
+ * @LastEditTime: 2020-06-20 16:56:20
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .traffic{
+      display: flex;
+    }
+    .traffic div{
+      margin: 0 20px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: gainsboro;
+    }
+    .red.light{
+      background: red;
+    }
+    .green.light{
+      background: green;
+    }
+    .yellow.light{
+      background: yellow;
+    }
+  </style>
+</head>
+<body>
+  <div class="traffic">
+    <div class="red"></div>
+    <div class="yellow"></div>
+    <div class="green"></div>
+  </div>
+  <button id="next">next</button>
+
+  <script>
+    //绿灯10s，黄灯2s，红灯5秒循环执行
+    const element = document.querySelector('.traffic');
+    function red(){
+      for(let i = 0; i < 3; i++){
+        element.children[i].classList.remove('light')
+        element.children[0].classList.add('light');
+      }
+    }
+
+    function green(){
+      for(let i = 0; i < 3; i++){
+        element.children[i].classList.remove('light')
+        element.children[2].classList.add('light');
+      }
+    }
+
+    function yellow(){
+      for(let i = 0; i < 3; i++){
+        element.children[i].classList.remove('light')
+        element.children[1].classList.add('light');
+      }
+    }
+
+    function sleep(t){
+      return new Promise((resolve, reject) => {
+        setTimeout(resolve, t)
+      })
+    }
+
+    function happen(element, eventName){
+      return new Promise((resolve, reject) => {
+        element.addEventListener(eventName, resolve, {once: true})
+      })
+    }
+
+    // async function go(){
+    //   while(true){
+    //     green()
+    //     await sleep(1000)
+    //     yellow()
+    //     await sleep(200)
+    //     red();
+    //     await sleep(500)
+    //   }
+    // }
+
+    async function go(){
+      while(true){
+        green()
+        await happen(document.getElementById('next'), 'click')
+        yellow()
+        await happen(document.getElementById('next'), 'click')
+        red();
+        await happen(document.getElementById('next'), 'click')
+      }
+    }
+
+  </script>
+</body>
+</html>
